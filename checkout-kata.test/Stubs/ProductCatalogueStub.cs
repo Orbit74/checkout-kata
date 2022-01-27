@@ -23,17 +23,17 @@ namespace checkout_kata.test.Stubs
             new Product
             {
                 Sku = "A99",
-                UnitPrice = 0.50M
+                UnitPrice = 0.50
             },
             new Product
             {
                 Sku = "B15",
-                UnitPrice = 0.30M
+                UnitPrice = 0.30
             },
             new Product
             {
                 Sku = "C40",
-                UnitPrice = 0.60M
+                UnitPrice = 0.60
             }
         };
     }

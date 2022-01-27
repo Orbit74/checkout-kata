@@ -6,12 +6,14 @@ namespace checkout_kata
     public class Checkout : ICheckout
     {
         private readonly IProductCatalogue _productCatalogue;
-        private readonly List<Product> _items;
+        private readonly IDiscounter _discounter;
+        private readonly Order _order;
 
-        public Checkout(IProductCatalogue productCatalogue)
+        public Checkout(IProductCatalogue productCatalogue, IDiscounter discounter)
         {
             _productCatalogue = productCatalogue;
-            _items = new List<Product>();
+            _discounter = discounter;
+            _order = new Order();
         }
 
         public void Scan(string sku)
@@ -19,13 +21,14 @@ namespace checkout_kata
             var product = _productCatalogue.Get(sku);
             if (product != null)
             {
-                _items.Add(product);
+                _order.Items.Add(product);
+                _order.TotalDiscount = _discounter.CalculateDiscount(_order.Items);
             }
         }
 
-        public decimal GetTotal()
+        public double GetTotal()
         {
-            return _items.Sum(x => x.UnitPrice);
+            return _order.Total;
         }
     }
 }
