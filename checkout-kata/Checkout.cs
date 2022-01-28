@@ -9,6 +9,9 @@ namespace checkout_kata
         private readonly IDiscounter _discounter;
         private readonly Order _order;
 
+        public double SubTotal => _order.SubTotal;
+        public double TotalWithOffers => _order.Total;
+
         public Checkout(IProductCatalogue productCatalogue, IDiscounter discounter)
         {
             _productCatalogue = productCatalogue;
@@ -16,19 +19,16 @@ namespace checkout_kata
             _order = new Order();
         }
 
-        public void Scan(string sku)
+        public void Scan(string sku, int quantity = 1)
         {
-            var product = _productCatalogue.Get(sku);
-            if (product != null)
+            if (quantity < 1) return;
+
+            var products = _productCatalogue.GetMany(sku, quantity);
+            if (products.Any())
             {
-                _order.Items.Add(product);
+                _order.Items.AddRange(products);
                 _order.TotalDiscount = _discounter.CalculateDiscount(_order.Items);
             }
-        }
-
-        public double GetTotal()
-        {
-            return _order.Total;
         }
     }
 }

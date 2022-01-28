@@ -23,45 +23,62 @@ namespace checkout_kata.test
         [Fact]
         public void ReturnZeroTotalWhenNoProductsScanned()
         {
-            _sut.GetTotal().Should().Be(0);
+            _sut.SubTotal.Should().Be(0);
+            _sut.TotalWithOffers.Should().Be(0);
         }
 
         [Fact]
-        public void ReturnZeroTotalWhenInvlidaProductIsScanned()
+        public void ReturnZeroTotalWhenInvalidProductIsScanned()
         {
             _sut.Scan("Invalid");
 
-            _sut.GetTotal().Should().Be(0);
+            _sut.SubTotal.Should().Be(0);
+            _sut.TotalWithOffers.Should().Be(0);
+            _mockDiscounter.Verify(v => v.CalculateDiscount(It.IsAny<IEnumerable<Product>>()), Times.Never);
         }
 
         [Fact]
-        public void ReturnCorrectTotalWhenOneProductIsScanned()
+        public void ReturnCorrectTotalsWhenOneProductIsScanned()
         {
             _sut.Scan("A99");
 
-            _sut.GetTotal().Should().Be(0.50);
+            _sut.SubTotal.Should().Be(0.50);
+            _sut.TotalWithOffers.Should().Be(0.50);
+            _mockDiscounter.Verify(v => v.CalculateDiscount(It.IsAny<IEnumerable<Product>>()), Times.Once);
         }
 
         [Fact]
-        public void ReturnCorrectTotalWhenMultipleProductAreScanned()
+        public void ReturnCorrectTotalsWhenLowerCaseProductSkuIsScanned()
+        {
+            _sut.Scan("a99");
+
+            _sut.SubTotal.Should().Be(0.50);
+            _sut.TotalWithOffers.Should().Be(0.50);
+            _mockDiscounter.Verify(v => v.CalculateDiscount(It.IsAny<IEnumerable<Product>>()), Times.Once);
+        }
+
+        [Fact]
+        public void ReturnCorrectTotalsWhenMultipleProductAreScanned()
         {
             _sut.Scan("A99");
             _sut.Scan("B15");
             _sut.Scan("C40");
 
-            _sut.GetTotal().Should().Be(1.4);
+            _sut.SubTotal.Should().Be(1.40);
+            _sut.TotalWithOffers.Should().Be(1.40);
+            _mockDiscounter.Verify(v => v.CalculateDiscount(It.IsAny<IEnumerable<Product>>()), Times.Exactly(3));
         }
 
         [Fact]
-        public void ReturnDiscountedTotalWhenProductsAreScanned()
+        public void ReturnCorrectTotalsWhenQualifyingProductsAreScanned()
         {
             GivenDiscountOf(0.20);
 
-            _sut.Scan("A99");
-            _sut.Scan("A99");
-            _sut.Scan("A99");
+            _sut.Scan("A99", 3);
 
-            _sut.GetTotal().Should().Be(1.3);
+            _sut.SubTotal.Should().Be(1.50);
+            _sut.TotalWithOffers.Should().Be(1.3);
+            _mockDiscounter.Verify(v => v.CalculateDiscount(It.IsAny<IEnumerable<Product>>()), Times.Once);
         }
 
         private void GivenDiscountOf(double discount)

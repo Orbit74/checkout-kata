@@ -8,17 +8,28 @@ namespace checkout_kata.test.Stubs
 {
     public class ProductCatalogueStub : IProductCatalogue
     {
-        public IEnumerable<Product> Get()
-        {
-            return _products;
-        }
-
         public Product? Get(string sku)
         {
             return _products.FirstOrDefault(x => x.Sku.Equals(sku, StringComparison.OrdinalIgnoreCase));
         }
 
-        private List<Product> _products = new List<Product>
+        public IEnumerable<Product> GetMany(string sku, int quantity)
+        {
+            var result = new List<Product>();
+            var product = Get(sku);
+
+            if (product != null)
+            {
+                for (int i = 0; i < quantity; i++)
+                {
+                    result.Add(product);
+                }
+            }
+
+            return result;
+        }
+
+        static List<Product> _products = new List<Product>
         {
             new Product
             {

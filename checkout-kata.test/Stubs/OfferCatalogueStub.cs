@@ -18,7 +18,7 @@ namespace checkout_kata.test.Stubs
             return _offers.FirstOrDefault(x => x.Sku.Equals(sku, StringComparison.OrdinalIgnoreCase));
         }
 
-        private List<Offer> _offers = new List<Offer>
+        static List<Offer> _offers = new List<Offer>
         {
             new Offer
             {

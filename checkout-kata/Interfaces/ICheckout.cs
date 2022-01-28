@@ -2,8 +2,8 @@
 {
     public interface ICheckout
     {
-        void Scan(string sku);
-
-        double GetTotal();
+        void Scan(string sku, int quantity);
+        double SubTotal { get; }
+        double TotalWithOffers { get; }
     }
 }

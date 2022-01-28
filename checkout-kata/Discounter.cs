@@ -14,21 +14,34 @@ namespace checkout_kata
 
         public double CalculateDiscount(IEnumerable<Product> products)
         {
+            if (products == null) { return 0; }
+
             double discount = 0;
 
-            var productDictionary = products.ToDictionary(x => x.Sku, x => x);
+            var productGrouping = products.GroupBy(x => x.Sku);
 
-            foreach(var product in productDictionary)
+            foreach(var groupedProduct in productGrouping)
             {
-                var offer = _offerCatalogue.Get(product.Key);
+                var offer = _offerCatalogue.Get(groupedProduct.Key);
                 if (offer != null)
                 {
-                    // increment the discount
+                    discount += GetDiscount(offer, groupedProduct);
                 }
-
             }
 
             return discount;
+        }
+
+        static double GetDiscount(Offer offer, IEnumerable<Product> products)
+        {
+            if (products.Count() >= offer.Quantity)
+            {
+                var discountMultiplier = products.Count() / offer.Quantity;
+
+                return Math.Round(offer.Discount * discountMultiplier, 2);
+            }
+
+            return 0;
         }
     }
 }
