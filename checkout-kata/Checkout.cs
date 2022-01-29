@@ -9,8 +9,8 @@ namespace checkout_kata
         private readonly IDiscounter _discounter;
         private readonly Order _order;
 
-        public double SubTotal => _order.SubTotal;
-        public double TotalWithOffers => _order.Total;
+        public decimal SubTotal => _order.SubTotal;
+        public decimal TotalWithOffers => _order.Total;
 
         public Checkout(IProductCatalogue productCatalogue, IDiscounter discounter)
         {
@@ -21,7 +21,7 @@ namespace checkout_kata
 
         public void Scan(string sku, int quantity = 1)
         {
-            if (quantity < 1) return;
+            if (sku == null || quantity < 1) { return; }
 
             var products = _productCatalogue.GetMany(sku, quantity);
             if (products.Any())

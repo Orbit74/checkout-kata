@@ -44,7 +44,7 @@ namespace checkout_kata.test
 
             var products = new List<Product> { product1, product2, product3 };
 
-            _sut.CalculateDiscount(products).Should().Be(0.15);
+            _sut.CalculateDiscount(products).Should().Be(0.15M);
         }
 
         [Theory]
@@ -56,11 +56,25 @@ namespace checkout_kata.test
         [InlineData("B15", 5, 0.30)]
         [InlineData("A99", 100, 6.60)]
         [InlineData("B15", 101, 7.50)]
-        public void ReturnCorrectDiscountWhenCalculateDiscountIsCalledIfProductsQualify(string sku, int quantity, double expectedDiscount)
+        public void ReturnCorrectDiscountWhenCalculateDiscountIsCalledIfProductsQualify(string sku, int quantity, decimal expectedDiscount)
         {
             var products = _productCatalogue.GetMany(sku, quantity); 
 
             _sut.CalculateDiscount(products).Should().Be(expectedDiscount);
+        }
+
+        [Fact]
+        public void ReturnCorrectDiscountWhenCalculateDiscountIsCalledIfMultipleOffersApply()
+        {
+            var product1 = _productCatalogue.Get("B15");
+            var product2 = _productCatalogue.Get("A99");
+            var product3 = _productCatalogue.Get("B15");
+            var product4 = _productCatalogue.Get("A99");
+            var product5 = _productCatalogue.Get("A99");
+
+            var products = new List<Product> { product1, product2, product3, product4, product5 };
+
+            _sut.CalculateDiscount(products).Should().Be(0.35M);
         }
     }
 }

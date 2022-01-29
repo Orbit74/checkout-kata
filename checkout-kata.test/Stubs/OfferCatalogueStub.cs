@@ -24,13 +24,13 @@ namespace checkout_kata.test.Stubs
             {
                 Sku = "A99",
                 Quantity = 3,
-                Discount = 0.20
+                Discount = 0.20M
             },
             new Offer
             {
                 Sku = "B15",
                 Quantity = 2,
-                Discount = 0.15
+                Discount = 0.15M
             }
         };
     }

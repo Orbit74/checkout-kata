@@ -10,6 +10,6 @@ namespace checkout_kata.Models
     {
         public string Sku { get; set; }
         public int Quantity { get; set; }
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
     }
 }

@@ -12,11 +12,11 @@ namespace checkout_kata
             _offerCatalogue = offerCatalogue;
         }
 
-        public double CalculateDiscount(IEnumerable<Product> products)
+        public decimal CalculateDiscount(IEnumerable<Product> products)
         {
             if (products == null) { return 0; }
 
-            double discount = 0;
+            decimal discount = 0;
 
             var productGrouping = products.GroupBy(x => x.Sku);
 
@@ -32,7 +32,7 @@ namespace checkout_kata
             return discount;
         }
 
-        static double GetDiscount(Offer offer, IEnumerable<Product> products)
+        static decimal GetDiscount(Offer offer, IEnumerable<Product> products)
         {
             if (products.Count() >= offer.Quantity)
             {

@@ -3,8 +3,8 @@
     public class Order
     {
         public List<Product> Items { get; set; } = new List<Product>();
-        public double TotalDiscount { get; set; }
-        public double SubTotal => Items.Sum(x => x.UnitPrice);
-        public double Total => SubTotal - TotalDiscount;
+        public decimal TotalDiscount { get; set; }
+        public decimal SubTotal => Items.Sum(x => x.UnitPrice);
+        public decimal Total => SubTotal - TotalDiscount;
     }
 }
